@@ -31,6 +31,11 @@
 
   <article class="daily" id="daily"></article>
 
+  <section id="family" hidden>
+    <h2 class="sec-title">Fotos da família</h2>
+    <div class="grid" id="family-grid"></div>
+  </section>
+
   <h2 class="sec-title">Todas as imagens</h2>
   <div class="grid" id="grid"></div>
 
@@ -57,7 +62,6 @@
   <div class="stage" id="stage">
     <canvas id="screen"></canvas>
     <div class="loading" id="loading"><div class="spinner"></div><p>Preparando a pintura...</p></div>
-    <div class="toast" id="toast"></div>
   </div>
   <nav class="palette" id="palette"></nav>
 </section>
@@ -113,6 +117,7 @@
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
 <script src="app.js"></script>
 </body>
 </html>

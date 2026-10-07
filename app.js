@@ -120,17 +120,19 @@ document.addEventListener('pointerdown', () => { if (settings.music && (!Music.c
 
 /* ---------------- catálogo e progresso ---------------- */
 let catalog = [];
+let family = [];
 const prog = {
   pct(slug) { return store.get('pct:' + slug, 0); },
   done(slug) { return store.get('done:' + slug, false); },
   thumb(slug) { return store.get('thumb:' + slug, null); },
 };
-function difficulty(n) { return n < 400 ? 'Fácil' : n < 700 ? 'Médio' : 'Detalhado'; }
+function difficulty(n) { return n < 110 ? 'Fácil' : n < 200 ? 'Médio' : 'Mais detalhes'; }
+function assetUrl(item, name) { return item.local ? item.urls[name] : `${item.slug}.${name}`; }
 function dayIndex() { const d = new Date(); return Math.floor((d - d.getTimezoneOffset() * 60000) / 86400000); }
 
 function thumbFor(item) {
-  if (prog.done(item.slug)) return prog.thumb(item.slug) || `${item.slug}.color.webp`;
-  return prog.thumb(item.slug) || `${item.slug}.line.webp`;
+  if (prog.done(item.slug)) return prog.thumb(item.slug) || assetUrl(item, 'color.webp');
+  return prog.thumb(item.slug) || assetUrl(item, 'line.webp');
 }
 function statusChips(item) {
   const pct = prog.pct(item.slug);
@@ -153,8 +155,14 @@ function renderGallery() {
       <button class="btn primary">${dDone ? 'Ver de novo' : dPct > 0 ? 'Continuar pintando' : 'Começar a pintar'}</button>
     </div>`;
   $('#daily').onclick = () => openPainter(daily);
+  const fam = $('#family-grid'); fam.innerHTML = '';
+  $('#family').hidden = family.length === 0;
+  for (const item of family) fam.appendChild(makeCard(item));
   const grid = $('#grid'); grid.innerHTML = '';
-  for (const item of catalog) {
+  for (const item of catalog) grid.appendChild(makeCard(item));
+}
+function makeCard(item) {
+  {
     const pct = prog.pct(item.slug);
     const b = document.createElement('button');
     b.className = 'card';
@@ -162,7 +170,7 @@ function renderGallery() {
       <div class="c-txt"><h3>${item.title}</h3><div class="chips">${statusChips(item)}</div>
       ${pct > 0 && !prog.done(item.slug) ? `<div class="cbar"><i style="width:${pct}%"></i></div>` : ''}</div>`;
     b.onclick = () => openPainter(item);
-    grid.appendChild(b);
+    return b;
   }
 }
 
@@ -196,11 +204,14 @@ const P = {
 
   async load(item) {
     this.ready = false;
-    const base = `${item.slug}.`;
-    const [data, blob] = await Promise.all([
-      fetch(base + 'data.json').then((r) => r.json()),
-      fetch(base + 'regions.png').then((r) => r.blob()),
-    ]);
+    let data, blob;
+    if (item.local) { data = item.data; blob = item.regionsBlob; }
+    else {
+      [data, blob] = await Promise.all([
+        fetch(`${item.slug}.data.json`).then((r) => r.json()),
+        fetch(`${item.slug}.regions.png`).then((r) => r.blob()),
+      ]);
+    }
     const W = this.W = data.w, H = this.H = data.h, N = W * H;
     // mapa de regiões: id = R + G*256 (lido sem conversão de cor)
     let bmp;
@@ -419,28 +430,31 @@ const P = {
     if (x < 0 || y < 0 || x >= this.W || y >= this.H) return -1;
     return this.ids[y * this.W + x];
   },
-  // tolerância para dedos: procura uma área da cor certa perto do toque
+  // toque: área da cor do pincel pinta; área de outra cor troca o pincel para essa cor
   tapAt(sx, sy) {
     const r = this.regionAt(sx, sy);
     const want = this.selected;
-    if (r >= 0 && !this.filled[r] && this.colorOf[r] === want) return this.fill(r);
+    if (r >= 0 && !this.filled[r]) {
+      if (this.colorOf[r] === want) return this.fill(r);
+      const c = this.colorOf[r];
+      this.select(c);
+      showToast(`Cor ${c + 1} escolhida: toque de novo para pintar`);
+      pulseSwatch(c);
+      return;
+    }
+    // toque em área já pintada ou fora do desenho: procura perto uma área da cor do pincel
     const rad = Math.max(2, Math.round(14 / this.scale));
     const cx = Math.floor((sx - this.tx) / this.scale), cy = Math.floor((sy - this.ty) / this.scale);
     let best = -1, bd = 1e9;
-    for (let dy = -rad; dy <= rad; dy += 1) {
+    for (let dy = -rad; dy <= rad; dy++) {
       const y = cy + dy; if (y < 0 || y >= this.H) continue;
-      for (let dx = -rad; dx <= rad; dx += 1) {
+      for (let dx = -rad; dx <= rad; dx++) {
         const x = cx + dx; if (x < 0 || x >= this.W) continue;
         const q = this.ids[y * this.W + x];
         if (!this.filled[q] && this.colorOf[q] === want) { const d = dx * dx + dy * dy; if (d < bd && d <= rad * rad) { bd = d; best = q; } }
       }
     }
-    if (best >= 0) return this.fill(best);
-    if (r >= 0 && !this.filled[r]) {
-      const c = this.colorOf[r];
-      showToast(`Esta área é da cor ${c + 1}`);
-      pulseSwatch(c);
-    }
+    if (best >= 0) this.fill(best);
   },
 
   hint() {
@@ -547,8 +561,8 @@ async function openPainter(item) {
   }
   paletteTotals = new Array(P.pal.length).fill(0);
   for (let r = 0; r < P.R; r++) paletteTotals[P.colorOf[r]]++;
-  P.resize(); P.fit(false);
   renderPalette(); updateProgress();
+  P.resize(); P.fit(false);
   $('#loading').hidden = true;
   history.pushState({ painter: item.slug }, '');
   if (P.remainingTotal === 0) setTimeout(finishPainting, 300);
@@ -571,10 +585,11 @@ function finishPainting() {
   store.set('thumb:' + item.slug, P.thumbnail());
   const full = P.art.toDataURL('image/png');
   $('#done-painted').src = full;
-  $('#done-original').src = `${item.slug}.original.jpg`;
+  $('#done-original').src = assetUrl(item, 'original.jpg');
   $('#done-painted').classList.remove('hidden-img');
   $('#done-original').classList.add('hidden-img');
-  $('#toggle-orig').textContent = 'Ver a pintura original';
+  $('#toggle-orig').textContent = item.local ? 'Ver a foto original' : 'Ver a pintura original';
+  $('#toast').classList.remove('show');
   $('#done-title').textContent = item.title;
   $('#done-artist').textContent = item.artist;
   $('#done-ptitle').textContent = item.prayerTitle;
@@ -584,7 +599,7 @@ function finishPainting() {
 $('#toggle-orig').onclick = () => {
   const showingOrig = $('#done-painted').classList.toggle('hidden-img');
   $('#done-original').classList.toggle('hidden-img', !showingOrig);
-  $('#toggle-orig').textContent = showingOrig ? 'Ver a minha pintura' : 'Ver a pintura original';
+  $('#toggle-orig').textContent = showingOrig ? 'Ver a minha pintura' : (P.item.local ? 'Ver a foto original' : 'Ver a pintura original');
 };
 $('#save-img').onclick = () => {
   P.art.toBlob((blob) => {
@@ -690,13 +705,61 @@ $('#about-btn').onclick = () => {
 $('#about-close').onclick = () => { $('#about-modal').hidden = true; };
 for (const m of document.querySelectorAll('.modal')) m.addEventListener('click', (e) => { if (e.target === m && m.id !== 'done-modal') m.hidden = true; });
 
+/* ---------------- fotos da família (guardadas só no aparelho) ---------------- */
+const DB = {
+  open() {
+    return new Promise((res, rej) => {
+      const rq = indexedDB.open('coresdafe', 1);
+      rq.onupgradeneeded = () => rq.result.createObjectStore('fotos', { keyPath: 'slug' });
+      rq.onsuccess = () => res(rq.result); rq.onerror = () => rej(rq.error);
+    });
+  },
+  async all() {
+    const db = await this.open();
+    return new Promise((res, rej) => { const rq = db.transaction('fotos').objectStore('fotos').getAll(); rq.onsuccess = () => res(rq.result); rq.onerror = () => rej(rq.error); });
+  },
+  async put(rec) {
+    const db = await this.open();
+    return new Promise((res, rej) => { const tx = db.transaction('fotos', 'readwrite'); tx.objectStore('fotos').put(rec); tx.oncomplete = res; tx.onerror = () => rej(tx.error); });
+  },
+};
+function b64ToBlob(b64, type) { const bin = atob(b64); const a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return new Blob([a], { type }); }
+function b64urlToBytes(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; const bin = atob(s); return Uint8Array.from(bin, (c) => c.charCodeAt(0)); }
+function recordToItem(rec) {
+  const regionsBlob = b64ToBlob(rec.regions, 'image/png');
+  const urls = {
+    'original.jpg': URL.createObjectURL(b64ToBlob(rec.original, 'image/jpeg')),
+    'line.webp': URL.createObjectURL(b64ToBlob(rec.line, 'image/webp')),
+    'color.webp': URL.createObjectURL(b64ToBlob(rec.color, 'image/webp')),
+  };
+  return { slug: rec.slug, title: rec.title, artist: rec.artist, prayerTitle: rec.prayerTitle, prayer: rec.prayer,
+    local: true, data: rec.data, regionsBlob, urls, difficulty: difficulty(rec.data.color.length) };
+}
+// link no formato #foto=<id>.<chave>: baixa o arquivo cifrado e guarda no aparelho
+async function importFromHash() {
+  const m = location.hash.match(/^#foto=([a-z0-9]+)\.([A-Za-z0-9_-]+)$/);
+  if (!m) return null;
+  history.replaceState(null, '', location.pathname);
+  const [, id, k] = m;
+  const buf = new Uint8Array(await fetch(`f-${id}.dat`).then((r) => { if (!r.ok) throw new Error('arquivo'); return r.arrayBuffer(); }));
+  const key = await crypto.subtle.importKey('raw', b64urlToBytes(k), 'AES-GCM', false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: buf.slice(0, 12) }, key, buf.slice(12));
+  const rec = JSON.parse(new TextDecoder().decode(plain));
+  await DB.put(rec);
+  return rec.slug;
+}
+
 /* ---------------- início ---------------- */
 async function boot() {
   applyTheme(); refreshMusicButtons();
   matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { if (!settings.theme) applyTheme(); });
   catalog = await fetch('catalog.json').then((r) => r.json());
   for (const it of catalog) it.difficulty = difficulty(it.regions || 500);
+  let newSlug = null;
+  try { newSlug = await importFromHash(); } catch (e) { console.error(e); setTimeout(() => showToast('Não foi possível abrir a foto'), 300); }
+  try { family = (await DB.all()).map(recordToItem); } catch (e) { family = []; }
   renderGallery();
+  if (newSlug) { const it = family.find((f) => f.slug === newSlug); if (it) { showToast('Foto adicionada!'); document.querySelector('#family').scrollIntoView({ behavior: 'smooth' }); } }
   if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 boot();

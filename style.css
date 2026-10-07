@@ -79,7 +79,7 @@ h1{font-family:var(--serif);font-weight:700;font-size:46px;margin:0;line-height:
 .loading[hidden]{display:none}
 .spinner{width:44px;height:44px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--gold);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:absolute;left:50%;bottom:18px;transform:translate(-50%,20px);background:var(--accent);color:var(--bg);padding:12px 22px;border-radius:999px;font-weight:800;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 118px);transform:translate(-50%,20px);background:var(--accent);color:var(--bg);padding:14px 24px;border-radius:22px;font-weight:800;opacity:0;transition:.25s;pointer-events:none;z-index:20;max-width:min(90vw,560px);text-align:center;line-height:1.3}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
 .palette{display:flex;gap:14px;overflow-x:auto;padding:16px 18px calc(env(safe-area-inset-bottom) + 12px);background:var(--bg);border-top:1px solid var(--line);scrollbar-width:none}
@@ -135,3 +135,5 @@ h1{font-family:var(--serif);font-weight:700;font-size:46px;margin:0;line-height:
   .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .p-tools #fit{display:none}
 }
+
+#family[hidden]{display:none}
