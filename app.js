@@ -760,7 +760,12 @@ async function boot() {
   try { family = (await DB.all()).map(recordToItem); } catch (e) { family = []; }
   renderGallery();
   if (newSlug) { const it = family.find((f) => f.slug === newSlug); if (it) { showToast('Foto adicionada!'); document.querySelector('#family').scrollIntoView({ behavior: 'smooth' }); } }
-  if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    // quando sai uma versão nova, recarrega sozinho (só fora da tela de pintura)
+    const had = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !P.ready) location.reload(); });
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
 }
 boot();
 })();
