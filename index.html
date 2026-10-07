@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Cores da Fé</title>
+<meta name="description" content="Pintura por números com obras sacras">
+<meta name="theme-color" content="#22324d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Lora:ital@0;1&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- GALERIA -->
+<section id="gallery" class="screen active">
+  <header class="g-head">
+    <div>
+      <p class="greet" id="greet">Bom dia</p>
+      <h1>Cores da Fé</h1>
+    </div>
+    <div class="head-btns">
+      <button class="icon-btn" id="g-music" aria-label="Música"></button>
+      <button class="icon-btn" id="g-theme" aria-label="Modo claro ou escuro"></button>
+    </div>
+  </header>
+
+  <article class="daily" id="daily"></article>
+
+  <h2 class="sec-title">Todas as imagens</h2>
+  <div class="grid" id="grid"></div>
+
+  <footer class="g-foot">
+    <button class="link-btn" id="about-btn">Sobre as obras</button>
+  </footer>
+</section>
+
+<!-- PINTURA -->
+<section id="painter" class="screen">
+  <header class="p-head">
+    <button class="back-btn" id="back" aria-label="Voltar"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span>Galeria</span></button>
+    <div class="p-title">
+      <strong id="p-title"></strong>
+      <div class="pbar"><i id="p-bar"></i></div>
+    </div>
+    <div class="p-tools">
+      <button class="icon-btn" id="hint" aria-label="Encontrar uma área"></button>
+      <button class="icon-btn" id="fit" aria-label="Ver tudo"></button>
+      <button class="icon-btn" id="p-music" aria-label="Música"></button>
+      <button class="icon-btn" id="more" aria-label="Mais opções"></button>
+    </div>
+  </header>
+  <div class="stage" id="stage">
+    <canvas id="screen"></canvas>
+    <div class="loading" id="loading"><div class="spinner"></div><p>Preparando a pintura...</p></div>
+    <div class="toast" id="toast"></div>
+  </div>
+  <nav class="palette" id="palette"></nav>
+</section>
+
+<!-- CONCLUSÃO -->
+<div class="modal" id="done-modal" hidden>
+  <div class="done-card">
+    <div class="done-img">
+      <img id="done-painted" alt="">
+      <img id="done-original" alt="" class="hidden-img">
+    </div>
+    <div class="done-text">
+      <p class="done-kicker">Pintura concluída</p>
+      <h2 id="done-title"></h2>
+      <p class="done-artist" id="done-artist"></p>
+      <div class="prayer">
+        <h3 id="done-ptitle"></h3>
+        <div id="done-prayer"></div>
+      </div>
+      <div class="done-btns">
+        <button class="btn soft" id="toggle-orig">Ver a pintura original</button>
+        <button class="btn soft" id="save-img">Guardar imagem</button>
+        <button class="btn primary" id="done-back">Voltar à galeria</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENU / CONFIRMAÇÃO -->
+<div class="modal" id="menu-modal" hidden>
+  <div class="sheet">
+    <h3>Opções</h3>
+    <button class="btn soft wide" id="m-theme">Mudar para modo escuro</button>
+    <button class="btn soft wide" id="m-restart">Recomeçar esta pintura</button>
+    <button class="btn primary wide" id="m-close">Fechar</button>
+  </div>
+</div>
+<div class="modal" id="confirm-modal" hidden>
+  <div class="sheet">
+    <h3>Recomeçar a pintura?</h3>
+    <p>Todas as cores desta imagem serão apagadas.</p>
+    <button class="btn danger wide" id="c-yes">Sim, recomeçar</button>
+    <button class="btn primary wide" id="c-no">Não, continuar pintando</button>
+  </div>
+</div>
+<div class="modal" id="about-modal" hidden>
+  <div class="sheet about">
+    <h3>Sobre as obras</h3>
+    <p>Todas as imagens são pinturas sacras em domínio público, transformadas em pintura por números. Ao terminar cada uma, aparece uma oração ou passagem das Escrituras.</p>
+    <ul id="about-list"></ul>
+    <p class="small">Toque numa cor embaixo e depois nas áreas com o mesmo número. Use dois dedos para aproximar ou afastar. O botão da lupa mostra uma área que ainda falta pintar.</p>
+    <button class="btn primary wide" id="about-close">Fechar</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

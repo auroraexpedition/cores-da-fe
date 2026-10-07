@@ -1,0 +1,82 @@
+[
+ {
+  "slug": "perpetuo-socorro",
+  "title": "Nossa Senhora do Perpétuo Socorro",
+  "artist": "Ícone bizantino, século XV",
+  "prayerTitle": "Lembrai-vos (Memorare)",
+  "prayer": "Lembrai-vos, ó piíssima Virgem Maria, que nunca se ouviu dizer que algum daqueles que têm recorrido à vossa proteção, implorado a vossa assistência e reclamado o vosso socorro, fosse por vós desamparado.\n\nAnimado eu, pois, com igual confiança, a vós, ó Virgem entre todas singular, como a Mãe recorro, de vós me valho e, gemendo sob o peso dos meus pecados, me prostro a vossos pés.\n\nNão desprezeis as minhas súplicas, ó Mãe do Verbo de Deus humanado, mas dignai-vos de as ouvir propícia e de me alcançar o que vos rogo. Amém.",
+  "regions": 462
+ },
+ {
+  "slug": "anunciacao",
+  "title": "A Anunciação",
+  "artist": "Fra Angelico, c. 1433",
+  "prayerTitle": "Ave Maria",
+  "prayer": "Ave Maria, cheia de graça, o Senhor é convosco. Bendita sois vós entre as mulheres, e bendito é o fruto do vosso ventre, Jesus.\n\nSanta Maria, Mãe de Deus, rogai por nós, pecadores, agora e na hora de nossa morte. Amém.",
+  "regions": 833
+ },
+ {
+  "slug": "natividade",
+  "title": "O Nascimento de Jesus",
+  "artist": "Giotto, c. 1305",
+  "prayerTitle": "Evangelho de São Lucas 2,10-11.14",
+  "prayer": "Não tenhais medo! Eis que vos anuncio uma grande alegria, que o será para todo o povo: hoje, na cidade de Davi, nasceu para vós um Salvador, que é o Cristo Senhor.\n\nGlória a Deus no mais alto dos céus, e paz na terra aos homens por Ele amados.",
+  "regions": 837
+ },
+ {
+  "slug": "bom-pastor",
+  "title": "O Bom Pastor",
+  "artist": "Bernhard Plockhorst, século XIX",
+  "prayerTitle": "Salmo 23",
+  "prayer": "O Senhor é o meu pastor, nada me faltará. Em verdes pastagens me faz repousar, para as águas tranquilas me conduz e restaura as minhas forças.\n\nAinda que eu atravesse o vale escuro, nenhum mal temerei, pois estais comigo. O vosso bastão e o vosso cajado me dão segurança.\n\nA vossa bondade e misericórdia hão de seguir-me todos os dias da minha vida.",
+  "regions": 761
+ },
+ {
+  "slug": "imaculada",
+  "title": "Imaculada Conceição",
+  "artist": "Bartolomé Esteban Murillo, 1678",
+  "prayerTitle": "Salve Rainha",
+  "prayer": "Salve, Rainha, Mãe de misericórdia, vida, doçura e esperança nossa, salve! A vós bradamos, os degredados filhos de Eva. A vós suspiramos, gemendo e chorando neste vale de lágrimas.\n\nEia, pois, advogada nossa, esses vossos olhos misericordiosos a nós volvei. E depois deste desterro, mostrai-nos Jesus, bendito fruto do vosso ventre.\n\nÓ clemente, ó piedosa, ó doce sempre Virgem Maria. Rogai por nós, santa Mãe de Deus, para que sejamos dignos das promessas de Cristo. Amém.",
+  "regions": 777
+ },
+ {
+  "slug": "sagrado-coracao",
+  "title": "Sagrado Coração de Jesus",
+  "artist": "Pompeo Batoni, 1767",
+  "prayerTitle": "Evangelho de São Mateus 11,28-29",
+  "prayer": "Vinde a mim, todos vós que estais cansados e fatigados, e eu vos darei descanso. Aprendei de mim, porque sou manso e humilde de coração, e encontrareis descanso para as vossas almas.\n\nSagrado Coração de Jesus, eu confio em vós.",
+  "regions": 456
+ },
+ {
+  "slug": "guadalupe",
+  "title": "Nossa Senhora de Guadalupe",
+  "artist": "Imagem do Tepeyac, 1531",
+  "prayerTitle": "Palavras de Nossa Senhora a São Juan Diego",
+  "prayer": "Não se perturbe o teu coração. Não estou eu aqui, que sou tua Mãe? Não estás sob a minha sombra e proteção? Não sou eu a fonte da tua alegria?\n\nNossa Senhora de Guadalupe, padroeira da América Latina, rogai por nós.",
+  "regions": 771
+ },
+ {
+  "slug": "crucificado",
+  "title": "Cristo Crucificado",
+  "artist": "Diego Velázquez, c. 1632",
+  "prayerTitle": "Evangelho de São João 3,16",
+  "prayer": "Deus amou tanto o mundo, que entregou o seu Filho único, para que todo o que nele crer não pereça, mas tenha a vida eterna.\n\nNós vos adoramos, Senhor Jesus Cristo, e vos bendizemos, porque pela vossa santa cruz remistes o mundo.",
+  "regions": 235
+ },
+ {
+  "slug": "misericordia",
+  "title": "Jesus Misericordioso",
+  "artist": "Eugeniusz Kazimirowski, 1934",
+  "prayerTitle": "Jaculatória da Divina Misericórdia",
+  "prayer": "Ó Sangue e Água que jorrastes do Coração de Jesus como fonte de misericórdia para nós, eu confio em vós.\n\nJesus, eu confio em vós.",
+  "regions": 228
+ },
+ {
+  "slug": "ressurreicao",
+  "title": "A Ressurreição",
+  "artist": "Carl Heinrich Bloch, 1875",
+  "prayerTitle": "Evangelho de São Lucas 24,5-6",
+  "prayer": "Por que procurais entre os mortos aquele que está vivo? Ele não está aqui, ressuscitou!\n\nGlória ao Pai, ao Filho e ao Espírito Santo. Como era no princípio, agora e sempre. Amém.",
+  "regions": 501
+ }
+]
